@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABL Credit | Product Specification Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: ABL Corporate (Slate & Cyan) -->
+    <!-- Application Structure Plan: 
+         1. Header: Branding and navigation (ABL Credit).
+         2. Intro: Brief context of the SCF product.
+         3. Interactive Process Map (The Core): Custom HTML stepper.
+         4. Transaction Simulator: Funding and Fee calculation (Updated colors).
+         5. New Client Application Form (Replaced Ecosystem).
+         6. Footer: Standard copyright.
+    -->
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #F9FAFB; /* Light Gray */
+            color: #1E293B; /* Dark Slate */
+        }
+        
+        /* Chart Container Styling Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        /* Custom scrollbar for data tables */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #F1F5F9; /* Slate-100 */
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #94A3B8; /* Slate-400 */
+            border-radius: 3px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #475569; /* Slate-600 */
+        }
+
+        /* Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #E2E8F0; /* Slate-200 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .active-step {
+            border-left: 4px solid #0E7490; /* Cyan-700 */
+            background-color: #ECFEFF; /* Cyan-50 */
+        }
+        .inactive-step {
+            border-left: 4px solid transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-200 selection:text-cyan-900">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-800 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- LOGO INSERTION POINT -->
+                <div class="flex items-center">
+                    <!-- Reverted to text and icon -->
+                    <svg class="h-6 w-6 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.44-1.44m6.364 1.44l-1.44 1.44a4.5 4.5 0 006.364 6.364l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-1.44 1.44z" />
+                    </svg>
+                    <span class="ml-2 text-xl font-bold">ABL Credit</span>
+                </div>
+                <!-- END LOGO INSERTION POINT -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#process-map" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Process Map</a>
+                        <a href="#simulator" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Transaction Sim</a>
+                        <a href="#application-form" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Application Form</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">ABL Credit Product Specification</h1>
+            <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">
+                A comprehensive operational blueprint for the ABL Credit application. This platform manages the full lifecycle from client onboarding and legal agreements to transaction funding, collection, and parallel participant management.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3">
+                <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-sm font-medium border border-cyan-200">End-to-End Workflow</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm font-medium border border-slate-200">Risk Mitigation</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm font-medium border border-slate-200">Client Onboarding</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- SECTION 1: Interactive Process Lifecycle -->
+        <section id="process-map">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    <span class="text-cyan-600 text-xl">❶</span> Process Lifecycle Explorer
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    Explore the **seven** core phases of the ABL Credit product. Click on any phase in the left panel to view the specific data inputs, required documents, and automated system actions defined in the specification.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[600px]">
+                <!-- Navigation Sidebar (Steps) -->
+                <div class="lg:col-span-4 flex flex-col gap-2 overflow-y-auto custom-scroll pr-2" id="step-nav">
+                    <!-- Steps will be injected by JS -->
+                </div>
+
+                <!-- Detail View Panel -->
+                <div class="lg:col-span-8 glass-panel rounded-xl p-6 md:p-8 flex flex-col relative overflow-hidden">
+                    <div id="step-content" class="h-full overflow-y-auto custom-scroll">
+                        <!-- Content injected by JS -->
+                        <div class="flex flex-col items-center justify-center h-full text-slate-400">
+                            <span class="text-4xl mb-4">👆</span>
+                            <p>Select a process phase to view details.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Transaction Simulator (Chart.js) -->
+        <section id="simulator" class="bg-slate-800 rounded-2xl p-6 md:p-10 text-white shadow-xl">
+            <div class="mb-8 border-b border-slate-700 pb-6">
+                <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-cyan-400 text-xl">❷</span> Transaction Simulator
+                </h2>
+                <p class="text-slate-400">
+                    Simulate the "Transaction Pending" and "Collection" phases, including the **Trading Fee markup**. Adjust the Purchase Order (PO) value and parameters to see the Gross Invoice Value, Client Reserve, and Net Funding amount.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Controls -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-slate-700 p-6 rounded-xl border border-slate-600">
+                        <label class="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2">PO Amount ($)</label>
+                        <input type="number" id="poInput" value="100000" step="5000" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors font-mono text-lg">
+                        
+                        <label class="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2 mt-6">Trading Fee (Markup %)</label>
+                        <input type="range" id="feeInput" min="1" max="10" value="5" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>1%</span>
+                            <span id="feeValueDisplay">5%</span>
+                            <span>10%</span>
+                        </div>
+                        
+                        <label class="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2 mt-6">Reserve Requirement (%)</label>
+                        <input type="range" id="reserveInput" min="5" max="50" value="20" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>5%</span>
+                            <span id="reserveValueDisplay">20%</span>
+                            <span>50%</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-700 p-6 rounded-xl border border-slate-600">
+                        <h3 class="font-semibold text-white mb-4">Calculated Metrics</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm">Initial PO Value</span>
+                                <span class="font-mono font-bold" id="metricPO">$100,000</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm">Trading Fee (Markup)</span>
+                                <span class="font-mono font-bold text-red-400" id="metricFee">$5,000</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm font-semibold">Gross Invoice Value</span>
+                                <span class="font-mono font-bold text-cyan-400" id="metricGrossInvoice">$105,000</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm">Client Reserve (Escrow)</span>
+                                <span class="font-mono font-bold text-cyan-400" id="metricReserve">$20,000</span>
+                            </div>
+                            <!-- Wire Transfer Fee -->
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm">Wire Transfer Fee</span>
+                                <span class="font-mono font-bold text-red-400" id="metricWireFee">$35</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-slate-400 text-sm font-semibold">ABL Funding (Net)</span>
+                                <span class="font-mono font-bold text-green-400" id="metricFunding">$79,965</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualizations -->
+                <div class="lg:col-span-2 grid grid-cols-1 gap-6">
+                    <!-- Chart 1: Funds Waterfall -->
+                    <div class="bg-white rounded-xl p-4 text-slate-900">
+                        <h4 class="text-sm font-bold text-slate-500 mb-2 uppercase">Funds Flow Analysis</h4>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="fundsChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-slate-400 mt-2">Visual split of the initial PO Value into Reserve Deduction and Net Payout.</p>
+                    </div>
+
+                    <!-- Chart 2: Collection Timeline -->
+                    <div class="bg-white rounded-xl p-4 text-slate-900">
+                        <h4 class="text-sm font-bold text-slate-500 mb-2 uppercase">Projected Collection Timeline</h4>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="collectionChart"></canvas>
+                        </div>
+                         <p class="text-xs text-center text-slate-400 mt-2">Probability of payment collection phases over 90 days, affected by risk factors (Reserve + Fee).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Client Application Form -->
+        <section id="application-form">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    <span class="text-cyan-600 text-xl">❸</span> New Client Application & Transaction Submission
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    Use this section to submit **initial client details** for onboarding and to submit **required documents** for a new transaction.
+                </p>
+            </div>
+
+            <div class="glass-panel rounded-xl p-8 shadow-lg">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Column 1: Company/Contact Info & Application Submission -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">Company Details & Primary Contact</h3>
+
+                        <!-- Company Legal Name -->
+                        <div>
+                            <label for="companyName" class="block text-sm font-medium text-slate-700 mb-1">Company Legal Name</label>
+                            <input type="text" id="companyName" placeholder="e.g., Global Trade Solutions Inc." class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <!-- Address -->
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+                            <input type="text" id="address" placeholder="Street Address, City, State/Province, Zip/Postal Code" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-slate-800 border-b border-dashed pb-1 pt-4 mb-4">Primary Contact</h3>
+
+                        <!-- Contact Name -->
+                        <div>
+                            <label for="contactName" class="block text-sm font-medium text-slate-700 mb-1">Contact Name</label>
+                            <input type="text" id="contactName" placeholder="Full Name of Primary Contact" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+1 (555) 123-4567" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                            <input type="email" id="email" placeholder="contact@company.com" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <button class="w-full mt-8 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-cyan-500/50">
+                            Submit Client Application (KYC/AML)
+                        </button>
+                    </div>
+
+                    <!-- Column 2: Required Documents (Split into Client & Transaction) -->
+                    <div class="space-y-8">
+                        
+                        <!-- Panel 1: Client Onboarding Documents (KYC/AML) -->
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">1. Client Onboarding Documents (KYC/AML)</h3>
+                            <p class="text-sm text-slate-600 mb-4">Mandatory documents required for the initial client setup.</p>
+                            
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📄</span> Tax Returns (Last 2 Years)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📜</span> Company Registration Documents
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📊</span> Financials YTD (Income Statement & Balance Sheet)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📝</span> Company Presentation / Business Plan Summary
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🆔</span> Driver License / Passport (Primary Contact)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🏦</span> Bank Statements (Last 3 Months)
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Panel 2: New Transaction Documents (Aligns with Process Step 3) -->
+                        <div class="bg-white p-6 rounded-lg border border-slate-300 shadow-inner">
+                            <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">2. New Transaction Document Submission</h3>
+                            <p class="text-sm text-slate-600 mb-4">Documents required to initiate funding on a specific trade (Aligns with **Process Step 3**).</p>
+                            
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">✉️</span> Purchase Order (PO) - Client to Buyer
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🧾</span> Commercial Invoice - ABL to Client
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🚛</span> Evidence of Delivery (B/L, AWB, QC Report)
+                                </li>
+                            </ul>
+                            
+                            <button class="w-full mt-8 bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-slate-500/50">
+                                Submit Transaction Documents
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-10 border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm">Generated for ABL Credit Product Specification Analysis.</p>
+            <p class="text-xs mt-2 opacity-50">Confidential & Proprietary Design Concept.</p>
+        </div>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // --- DATA: SCF Process Specification ---
+        const scfData = [
+            {
+                id: 'onboarding',
+                title: '1. Client Onboarding',
+                icon: '📝',
+                summary: 'Initial data capture and compliance checks.',
+                table: [
+                    // UPDATED: Now reflects the form fields (Company/Contact) and the required KYC/AML documents
+                    { action: 'Website Form Submission', input: 'Company Legal Name, Address, Contact Info (Name, Phone, Email)', output: 'Client Profile (Draft)', system: 'Initiate KYC/AML/Credit Checks' },
+                    { action: 'Document Attachment', input: 'Tax Returns, Registration Docs, YTD Financials, ID/Passport, Bank Statements', output: 'Doc Repository Link', system: 'Flag for Internal Review & Verification' }
+                ]
+            },
+            {
+                id: 'agreements',
+                title: '2. Agreements Execution',
+                icon: '🤝',
+                summary: 'Legal framework establishment.',
+                table: [
+                    { action: 'Trade Finance Agreement', input: 'Legal Review Approval', output: 'Signed Agreement', system: 'Status -> READY_FOR_TRANSACTION' },
+                    { action: 'Escrow Agreement', input: 'Bank Details, Custodian Sig', output: 'Signed Escrow Agreement', system: 'Link Escrow to Client Profile' },
+                    { action: 'Personal Guarantee', input: 'Guarantor Details (Optional)', output: 'Signed Guarantee', system: 'Update Risk Profile' }
+                ]
+            },
+            {
+                id: 'transaction',
+                title: '3. Transaction Requirements',
+                icon: '⚡',
+                summary: 'Validation gates, PO execution, and **Gross Invoice calculation** (PO + Trading Fee).',
+                table: [
+                    { action: 'PO Client-ABL Executed', input: 'Scanned PO (Client->Buyer)', output: 'PO Record (Approved)', system: 'Check against Client Limits' },
+                    // This step calculates the Gross Invoice value (PO + Fee)
+                    { action: 'Invoice ABL-Client Calculation', input: 'Scanned Invoice, Trading Fee Rate', output: 'Gross Invoice Record (Issued/Calculated)', system: 'Calculate Markup Fee & Obligation on PO value' },
+                    { action: 'Evidence of Delivery', input: 'BOL/AWB, QC Report', output: 'Delivery Proof', system: 'Flag Physically Complete' },
+                    { action: 'Transfer Reserve to Escrow', input: 'Bank Confirmation', output: 'Reserve Record (Complete)', system: 'Confirm Reserve Secured (Gatekeeper)' },
+                    { action: 'PO ABL-Supplier', input: 'Scanned PO (ABL->Supplier)', output: 'Supplier PO Record', system: 'Prepare Disbursement' }
+                ]
+            },
+            {
+                id: 'invoice_creation',
+                title: '4. Invoice Creation and Funding',
+                icon: '📑',
+                summary: 'Documenting the finalized invoice details (from Step 3) and executing the net funding disbursement.',
+                table: [
+                    // This step receives the Gross Invoice Amount calculated in Step 3 for final documentation
+                    { action: 'Invoice Data Input', input: 'Gross Invoice Amount (from Step 3), Payment Terms, Due Date, Obligor Details, Wire Transfer Fee', output: 'Invoice Record (Validated/Finalized)', system: 'Execute Final Due Diligence; Status -> READY_FOR_DISBURSEMENT' },
+                    { action: 'Disbursement Request', input: 'Net Funding Amount (PO - Reserve - Wire Fee), Client Bank Details', output: 'Payment Instruction Sent', system: 'Initiate ACH/Wire Transfer to Client' }
+                ]
+            },
+            {
+                id: 'collection',
+                title: '5. Collection Phase',
+                icon: '🔄',
+                summary: 'Repayment tracking and reconciliation.',
+                table: [
+                    { action: 'Payment Statement Email', input: 'Schedule Date, Template', output: 'Confirmation Sent', system: 'Auto-email to Obligor' },
+                    { action: 'Reconciliation', input: 'Bank Stmt, Transaction IDs', output: 'Recon Report', system: 'Match Funds -> Complete Transaction' },
+                    { action: 'Personal Collection', input: 'Activity Log', output: 'Collection Note', system: 'Status -> IN_COLLECTION_1' },
+                    { action: 'Legal Collection', input: 'Engagement Docs', output: 'Litigation Status', system: 'Status -> IN_COLLECTION_2' }
+                ]
+            },
+            {
+                id: 'participant',
+                title: '6. Participant Management',
+                icon: '👥',
+                summary: 'Parallel invoice selling workflow.',
+                table: [
+                    { action: 'Participation Agreement', input: 'Compliance Approval', output: 'Executed Agreement', system: 'Activate Participant Profile' },
+                    { action: 'Sell Invoices', input: 'Tranche Amount, Yield Rate', output: 'Sale Record', system: 'Update ABL Ledger' },
+                    { action: 'Generate Statements', input: 'Principal/Interest Data', output: 'PDF Statement', system: 'Scheduled Delivery' }
+                ]
+            },
+            {
+                id: 'broker',
+                title: '7. Broker Management',
+                icon: '💼',
+                summary: 'Commission tracking workflow.',
+                table: [
+                    { action: 'Broker Agreement', input: 'Compliance Approval', output: 'Executed Agreement', system: 'Link Broker to Client' },
+                    { action: 'Commission Calculation', input: 'Volume, Rate', output: 'Ledger Entry', system: 'Auto-calculate on Funding' },
+                    { action: 'Payouts', input: 'Bank Details', output: 'Payment Record', system: 'Initiate ACH/Wire' }
+                ]
+            }
+        ];
+
+        // --- UI LOGIC: Process Explorer ---
+        const stepNav = document.getElementById('step-nav');
+        const stepContent = document.getElementById('step-content');
+        let activeIndex = 3; // Default to step 4 for demonstration
+
+        function renderSteps() {
+            stepNav.innerHTML = '';
+            scfData.forEach((step, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === activeIndex;
+                btn.className = `w-full text-left p-4 rounded-lg transition-all duration-200 flex items-center justify-between group ${
+                    isActive ? 'active-step shadow-sm' : 'inactive-step hover:bg-slate-200 bg-slate-100'
+                }`;
+                btn.onclick = () => {
+                    activeIndex = index;
+                    renderSteps();
+                    renderContent();
+                };
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${step.icon}</span>
+                        <div>
+                            <h3 class="font-bold ${isActive ? 'text-slate-900' : 'text-slate-600'}">${step.title}</h3>
+                            <p class="text-xs text-slate-500 truncate max-w-[180px]">${step.summary}</p>
+                        </div>
+                    </div>
+                    <span class="${isActive ? 'text-cyan-600' : 'text-slate-300'}">➤</span>
+                `;
+                stepNav.appendChild(btn);
+            });
+        }
+
+        function renderContent() {
+            const data = scfData[activeIndex];
+            
+            // Build Table Rows
+            const rows = data.table.map(row => `
+                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td class="py-3 px-4 text-slate-800 font-medium align-top">${row.action}</td>
+                    <td class="py-3 px-4 text-slate-600 text-sm align-top">${row.input}</td>
+                    <td class="py-3 px-4 text-slate-600 text-sm align-top"><span class="bg-slate-100 px-2 py-1 rounded text-xs border border-slate-200">${row.output}</span></td>
+                    <td class="py-3 px-4 text-cyan-700 text-sm italic align-top">${row.system}</td>
+                </tr>
+            `).join('');
+
+            stepContent.innerHTML = `
+                <div class="animate-fade-in">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200">
+                        <span class="text-4xl bg-slate-100 p-3 rounded-xl">${data.icon}</span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">${data.title}</h2>
+                            <p class="text-slate-500">${data.summary}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="py-3 px-4 rounded-tl-lg">Action Step</th>
+                                    <th class="py-3 px-4">Required Input Data</th>
+                                    <th class="py-3 px-4">Output / Status</th>
+                                    <th class="py-3 px-4 rounded-tr-lg">System Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CHART 1 & 2: Transaction Simulator (Chart.js) ---
+        let fundsChart, collectionChart;
+        // CONSTANT: Fixed Wire Transfer Fee
+        const WIRE_FEE = 35; 
+
+        function initCharts() {
+            // Funds Waterfall Chart
+            const ctxFunds = document.getElementById('fundsChart').getContext('2d');
+            fundsChart = new Chart(ctxFunds, {
+                type: 'bar',
+                data: {
+                    labels: [['PO Value'], ['Client Reserve', '(Escrow)'], ['Net Funding', '(Disbursed)']],
+                    datasets: [{
+                        label: 'Amount ($)',
+                        data: [100000, 20000, 80000],
+                        // Updated colors: Slate-600 (PO), Cyan-500 (Reserve), Green-500 (Funding)
+                        backgroundColor: ['#475569', '#06B6D4', '#22C55E'], 
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: (items) => items[0].label.replaceAll(',', ' '),
+                                label: (ctx) => `$${ctx.raw.toLocaleString()}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#F1F5F9' },
+                            ticks: { callback: (val) => '$' + val/1000 + 'k' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Collection Timeline Chart
+            const ctxCollection = document.getElementById('collectionChart').getContext('2d');
+            collectionChart = new Chart(ctxCollection, {
+                type: 'line',
+                data: {
+                    labels: ['Day 0', 'Day 30', 'Day 60', 'Day 90'],
+                    datasets: [{
+                        label: 'Collection Status Probability',
+                        data: [100, 95, 40, 10],
+                        // Updated colors: Cyan-500 (Line), Cyan-50 (Fill)
+                        borderColor: '#06B6D4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        annotation: {}
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Payment Probability (%)' }
+                        }
+                    }
+                } 
+            });
+        }
+
+        function updateSimulation() {
+            const poVal = parseFloat(document.getElementById('poInput').value) || 0;
+            const reservePct = parseInt(document.getElementById('reserveInput').value) || 0;
+            const feePct = parseInt(document.getElementById('feeInput').value) || 0;
+            
+            // Calculations
+            const feeVal = poVal * (feePct / 100);
+            const grossInvoiceVal = poVal + feeVal;
+            
+            const reserveVal = poVal * (reservePct / 100);
+            // Net Funding: PO - Reserve - Wire Fee
+            const fundingVal = poVal - reserveVal - WIRE_FEE; 
+
+            // Update UI Text
+            document.getElementById('feeValueDisplay').textContent = `${feePct}%`;
+            document.getElementById('reserveValueDisplay').textContent = `${reservePct}%`;
+            
+            document.getElementById('metricPO').textContent = `$${poVal.toLocaleString()}`;
+            document.getElementById('metricFee').textContent = `$${feeVal.toLocaleString()}`;
+            document.getElementById('metricGrossInvoice').textContent = `$${grossInvoiceVal.toLocaleString()}`;
+            
+            document.getElementById('metricReserve').textContent = `$${reserveVal.toLocaleString()}`;
+            document.getElementById('metricWireFee').textContent = `$${WIRE_FEE.toLocaleString()}`;
+            document.getElementById('metricFunding').textContent = `$${fundingVal.toLocaleString()}`;
+
+            // Update Funds Chart (Keeping it simple for visualization scale)
+            fundsChart.data.labels = [['PO Value'], ['Client Reserve', `(${reservePct}%)`], ['Net Funding', '(Disbursed)']];
+            // Chart displays the primary flow (PO - Reserve), detailed fee deducted in metric text only.
+            fundsChart.data.datasets[0].data = [poVal, reserveVal, poVal - reserveVal]; 
+            fundsChart.update();
+
+            // Update Collection Chart (Mock logic: Risk influenced by both reserve and fee)
+            const riskFactor = (reservePct + feePct) / 60;
+            const baseProb = 90 + (riskFactor * 10);
+            collectionChart.data.datasets[0].data = [100, baseProb, baseProb * 0.5, baseProb * 0.1];
+            collectionChart.update();
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set initial active step to 4 (Invoice Creation) for demonstration
+            // activeIndex = 3; 
+            renderSteps();
+            renderContent();
+            
+            // Re-initialize charts
+            initCharts();
+
+            // Event Listeners for Simulator
+            document.getElementById('poInput').addEventListener('input', updateSimulation);
+            document.getElementById('reserveInput').addEventListener('input', updateSimulation);
+            document.getElementById('feeInput').addEventListener('input', updateSimulation);
+            
+            // Initial calc
+            updateSimulation();
+        });
+
+    </script>
+</body>
+</html>

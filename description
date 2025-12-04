@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Chosen Palette: ABL Corporate (Slate & Cyan) -->
     <!-- Application Structure Plan: 
@@ -15,7 +15,7 @@
          2. Intro: Brief context of the SCF product.
          3. Interactive Process Map (The Core): Custom HTML stepper.
          4. Transaction Simulator: Funding and Fee calculation (Updated colors).
-         5. Ecosystem & Parallel Tracks: Broker/Participant charts (Updated colors).
+         5. New Client Application Form (Replaced Ecosystem).
          6. Footer: Standard copyright.
     -->
     <style>
@@ -79,15 +79,20 @@
     <nav class="bg-slate-800 text-white sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl text-cyan-400">⛓️</span>
-                    <span class="font-bold text-xl tracking-tight">ABL <span class="text-cyan-400">Credit</span></span>
+                <!-- LOGO INSERTION POINT -->
+                <div class="flex items-center">
+                    <!-- Reverted to text and icon -->
+                    <svg class="h-6 w-6 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.44-1.44m6.364 1.44l-1.44 1.44a4.5 4.5 0 006.364 6.364l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-1.44 1.44z" />
+                    </svg>
+                    <span class="ml-2 text-xl font-bold">ABL Credit</span>
                 </div>
+                <!-- END LOGO INSERTION POINT -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#process-map" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Process Map</a>
                         <a href="#simulator" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Transaction Sim</a>
-                        <a href="#ecosystem" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Ecosystem</a>
+                        <a href="#application-form" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Application Form</a>
                     </div>
                 </div>
             </div>
@@ -104,7 +109,7 @@
             <div class="mt-6 flex flex-wrap gap-3">
                 <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-sm font-medium border border-cyan-200">End-to-End Workflow</span>
                 <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm font-medium border border-slate-200">Risk Mitigation</span>
-                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm font-medium border border-slate-200">Participant Funding</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm font-medium border border-slate-200">Client Onboarding</span>
             </div>
         </div>
     </header>
@@ -119,7 +124,7 @@
                     <span class="text-cyan-600 text-xl">❶</span> Process Lifecycle Explorer
                 </h2>
                 <p class="text-slate-600 mt-2">
-                    Explore the six core phases of the ABL Credit product. Click on any phase in the left panel to view the specific data inputs, required documents, and automated system actions defined in the specification.
+                    Explore the **seven** core phases of the ABL Credit product. Click on any phase in the left panel to view the specific data inputs, required documents, and automated system actions defined in the specification.
                 </p>
             </div>
 
@@ -196,9 +201,14 @@
                                 <span class="text-slate-400 text-sm">Client Reserve (Escrow)</span>
                                 <span class="font-mono font-bold text-cyan-400" id="metricReserve">$20,000</span>
                             </div>
+                            <!-- Wire Transfer Fee -->
+                            <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+                                <span class="text-slate-400 text-sm">Wire Transfer Fee</span>
+                                <span class="font-mono font-bold text-red-400" id="metricWireFee">$35</span>
+                            </div>
                             <div class="flex justify-between items-center pt-1">
                                 <span class="text-slate-400 text-sm font-semibold">ABL Funding (Net)</span>
-                                <span class="font-mono font-bold text-green-400" id="metricFunding">$80,000</span>
+                                <span class="font-mono font-bold text-green-400" id="metricFunding">$79,965</span>
                             </div>
                         </div>
                     </div>
@@ -227,45 +237,111 @@
             </div>
         </section>
 
-        <!-- SECTION 3: Parallel Ecosystems (Plotly) -->
-        <section id="ecosystem">
+        <!-- SECTION 3: Client Application Form -->
+        <section id="application-form">
             <div class="mb-6">
                 <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                    <span class="text-cyan-600 text-xl">❸</span> Parallel Ecosystem Management
+                    <span class="text-cyan-600 text-xl">❸</span> New Client Application & Transaction Submission
                 </h2>
                 <p class="text-slate-600 mt-2">
-                    The platform manages auxiliary systems alongside the main transaction cycle. <strong>Participants</strong> purchase invoice tranches for yield, while <strong>Brokers</strong> earn commissions on originating client volume.
+                    Use this section to submit **initial client details** for onboarding and to submit **required documents** for a new transaction.
                 </p>
             </div>
 
-            <div class="glass-panel rounded-xl p-1">
-                <div class="grid grid-cols-1 lg:grid-cols-4">
-                    <!-- Context Side -->
-                    <div class="lg:col-span-1 bg-slate-50 p-6 border-r border-slate-200">
-                        <h3 class="font-bold text-slate-800 mb-4">System Actions</h3>
-                        
-                        <div class="mb-6">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Participant Track</h4>
-                            <ul class="text-sm space-y-2 text-slate-600">
-                                <li class="flex gap-2"><span class="text-green-600">✓</span> Onboard Participant</li>
-                                <li class="flex gap-2"><span class="text-green-600">✓</span> Track Invoice Sales</li>
-                                <li class="flex gap-2"><span class="text-green-600">✓</span> Generate Statements</li>
-                            </ul>
+            <div class="glass-panel rounded-xl p-8 shadow-lg">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Column 1: Company/Contact Info & Application Submission -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">Company Details & Primary Contact</h3>
+
+                        <!-- Company Legal Name -->
+                        <div>
+                            <label for="companyName" class="block text-sm font-medium text-slate-700 mb-1">Company Legal Name</label>
+                            <input type="text" id="companyName" placeholder="e.g., Global Trade Solutions Inc." class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
                         </div>
 
+                        <!-- Address -->
                         <div>
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Broker Track</h4>
-                            <ul class="text-sm space-y-2 text-slate-600">
-                                <li class="flex gap-2"><span class="text-cyan-600">✓</span> Calculate Commission</li>
-                                <li class="flex gap-2"><span class="text-cyan-600">✓</span> Issue Statements</li>
-                                <li class="flex gap-2"><span class="text-cyan-600">✓</span> Process Payouts</li>
-                            </ul>
+                            <label for="address" class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+                            <input type="text" id="address" placeholder="Street Address, City, State/Province, Zip/Postal Code" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
                         </div>
+                        
+                        <h3 class="text-lg font-semibold text-slate-800 border-b border-dashed pb-1 pt-4 mb-4">Primary Contact</h3>
+
+                        <!-- Contact Name -->
+                        <div>
+                            <label for="contactName" class="block text-sm font-medium text-slate-700 mb-1">Contact Name</label>
+                            <input type="text" id="contactName" placeholder="Full Name of Primary Contact" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+1 (555) 123-4567" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                            <input type="email" id="email" placeholder="contact@company.com" class="w-full p-3 border border-slate-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 transition-colors">
+                        </div>
+
+                        <button class="w-full mt-8 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-cyan-500/50">
+                            Submit Client Application (KYC/AML)
+                        </button>
                     </div>
 
-                    <!-- Plotly Chart -->
-                    <div class="lg:col-span-3 p-4 md:p-6 bg-white">
-                        <div id="ecosystemPlot" class="w-full h-[400px]"></div>
+                    <!-- Column 2: Required Documents (Split into Client & Transaction) -->
+                    <div class="space-y-8">
+                        
+                        <!-- Panel 1: Client Onboarding Documents (KYC/AML) -->
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">1. Client Onboarding Documents (KYC/AML)</h3>
+                            <p class="text-sm text-slate-600 mb-4">Mandatory documents required for the initial client setup.</p>
+                            
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📄</span> Tax Returns (Last 2 Years)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📜</span> Company Registration Documents
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📊</span> Financials YTD (Income Statement & Balance Sheet)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">📝</span> Company Presentation / Business Plan Summary
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🆔</span> Driver License / Passport (Primary Contact)
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🏦</span> Bank Statements (Last 3 Months)
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Panel 2: New Transaction Documents (Aligns with Process Step 3) -->
+                        <div class="bg-white p-6 rounded-lg border border-slate-300 shadow-inner">
+                            <h3 class="text-xl font-bold text-slate-800 border-b pb-2 mb-4">2. New Transaction Document Submission</h3>
+                            <p class="text-sm text-slate-600 mb-4">Documents required to initiate funding on a specific trade (Aligns with **Process Step 3**).</p>
+                            
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">✉️</span> Purchase Order (PO) - Client to Buyer
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🧾</span> Commercial Invoice - ABL to Client
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <span class="text-lg text-cyan-600">🚛</span> Evidence of Delivery (B/L, AWB, QC Report)
+                                </li>
+                            </ul>
+                            
+                            <button class="w-full mt-8 bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-slate-500/50">
+                                Submit Transaction Documents
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,20 +363,24 @@
         const scfData = [
             {
                 id: 'onboarding',
-                title: '1. Client Onboarding',
+                // UPDATED: Renamed to Client Lead/Application
+                title: '1. Client Lead/Application', 
                 icon: '📝',
-                summary: 'Initial data capture and compliance checks.',
+                summary: 'Initial data capture, document submission, and lead qualification.',
                 table: [
-                    { action: 'Website Form Submission', input: 'Company Name, Registration, Financials', output: 'Client Profile (Draft)', system: 'Initiate KYC/AML Checks' },
-                    { action: 'Document Attachment', input: 'Cert. of Incorp, Board Res, Tax IDs', output: 'Doc Repository Link', system: 'Flag for Internal Review' }
+                    { action: 'Website Form Submission', input: 'Company Legal Name, Address, Contact Info (Name, Phone, Email)', output: 'Client Profile (Draft)', system: 'Initiate KYC/AML/Credit Checks' },
+                    { action: 'Document Attachment', input: 'Tax Returns, Registration Docs, YTD Financials, ID/Passport, Bank Statements', output: 'Doc Repository Link', system: 'Flag for Internal Review & Verification' }
                 ]
             },
             {
                 id: 'agreements',
-                title: '2. Agreements Execution',
+                // UPDATED: Renamed to include Underwriting
+                title: '2. Underwriting & Agreements Execution',
                 icon: '🤝',
-                summary: 'Legal framework establishment.',
+                summary: 'Risk review, commercial assessment, and legal framework establishment.',
                 table: [
+                    // ADDED: Underwriting action step
+                    { action: 'Underwriting Review', input: 'Client Financials, KYC/AML Results, Credit Score', output: 'Risk Assessment/Approval Memo', system: 'Determine Exposure Limit & Trading Fee Rate' }, 
                     { action: 'Trade Finance Agreement', input: 'Legal Review Approval', output: 'Signed Agreement', system: 'Status -> READY_FOR_TRANSACTION' },
                     { action: 'Escrow Agreement', input: 'Bank Details, Custodian Sig', output: 'Signed Escrow Agreement', system: 'Link Escrow to Client Profile' },
                     { action: 'Personal Guarantee', input: 'Guarantor Details (Optional)', output: 'Signed Guarantee', system: 'Update Risk Profile' }
@@ -310,18 +390,30 @@
                 id: 'transaction',
                 title: '3. Transaction Requirements',
                 icon: '⚡',
-                summary: 'The core funding cycle, validation gates, and markup calculation.',
+                summary: 'Validation gates, PO execution, and **Gross Invoice calculation** (PO + Trading Fee).',
                 table: [
                     { action: 'PO Client-ABL Executed', input: 'Scanned PO (Client->Buyer)', output: 'PO Record (Approved)', system: 'Check against Client Limits' },
-                    { action: 'Invoice ABL-Client', input: 'Scanned Invoice, Trading Fee Rate', output: 'Gross Invoice Record (Issued)', system: 'Calculate Markup Fee & Obligation' },
+                    // This step calculates the Gross Invoice value (PO + Fee)
+                    { action: 'Invoice ABL-Client Calculation', input: 'Scanned Invoice, Trading Fee Rate', output: 'Gross Invoice Record (Issued/Calculated)', system: 'Calculate Markup Fee & Obligation on PO value' },
                     { action: 'Evidence of Delivery', input: 'BOL/AWB, QC Report', output: 'Delivery Proof', system: 'Flag Physically Complete' },
                     { action: 'Transfer Reserve to Escrow', input: 'Bank Confirmation', output: 'Reserve Record (Complete)', system: 'Confirm Reserve Secured (Gatekeeper)' },
                     { action: 'PO ABL-Supplier', input: 'Scanned PO (ABL->Supplier)', output: 'Supplier PO Record', system: 'Prepare Disbursement' }
                 ]
             },
             {
+                id: 'invoice_creation',
+                title: '4. Invoice Creation and Funding',
+                icon: '📑',
+                summary: 'Documenting the finalized invoice details (from Step 3) and executing the net funding disbursement.',
+                table: [
+                    // This step receives the Gross Invoice Amount calculated in Step 3 for final documentation
+                    { action: 'Invoice Data Input', input: 'Gross Invoice Amount (from Step 3), Payment Terms, Due Date, Obligor Details, Wire Transfer Fee', output: 'Invoice Record (Validated/Finalized)', system: 'Execute Final Due Diligence; Status -> READY_FOR_DISBURSEMENT' },
+                    { action: 'Disbursement Request', input: 'Net Funding Amount (PO - Reserve - Wire Fee), Client Bank Details', output: 'Payment Instruction Sent', system: 'Initiate ACH/Wire Transfer to Client' }
+                ]
+            },
+            {
                 id: 'collection',
-                title: '4. Collection Phase',
+                title: '5. Collection Phase',
                 icon: '🔄',
                 summary: 'Repayment tracking and reconciliation.',
                 table: [
@@ -333,7 +425,7 @@
             },
             {
                 id: 'participant',
-                title: '5. Participant Management',
+                title: '6. Participant Management',
                 icon: '👥',
                 summary: 'Parallel invoice selling workflow.',
                 table: [
@@ -344,7 +436,7 @@
             },
             {
                 id: 'broker',
-                title: '6. Broker Management',
+                title: '7. Broker Management',
                 icon: '💼',
                 summary: 'Commission tracking workflow.',
                 table: [
@@ -358,7 +450,7 @@
         // --- UI LOGIC: Process Explorer ---
         const stepNav = document.getElementById('step-nav');
         const stepContent = document.getElementById('step-content');
-        let activeIndex = 0;
+        let activeIndex = 3; // Default to step 4 for demonstration
 
         function renderSteps() {
             stepNav.innerHTML = '';
@@ -368,6 +460,11 @@
                 btn.className = `w-full text-left p-4 rounded-lg transition-all duration-200 flex items-center justify-between group ${
                     isActive ? 'active-step shadow-sm' : 'inactive-step hover:bg-slate-200 bg-slate-100'
                 }`;
+                btn.onclick = () => {
+                    activeIndex = index;
+                    renderSteps();
+                    renderContent();
+                };
                 btn.innerHTML = `
                     <div class="flex items-center gap-3">
                         <span class="text-2xl">${step.icon}</span>
@@ -378,11 +475,6 @@
                     </div>
                     <span class="${isActive ? 'text-cyan-600' : 'text-slate-300'}">➤</span>
                 `;
-                btn.onclick = () => {
-                    activeIndex = index;
-                    renderSteps();
-                    renderContent();
-                };
                 stepNav.appendChild(btn);
             });
         }
@@ -431,6 +523,8 @@
 
         // --- CHART 1 & 2: Transaction Simulator (Chart.js) ---
         let fundsChart, collectionChart;
+        // CONSTANT: Fixed Wire Transfer Fee
+        const WIRE_FEE = 35; 
 
         function initCharts() {
             // Funds Waterfall Chart
@@ -501,7 +595,7 @@
                             title: { display: true, text: 'Payment Probability (%)' }
                         }
                     }
-                }
+                } 
             });
         }
 
@@ -510,12 +604,13 @@
             const reservePct = parseInt(document.getElementById('reserveInput').value) || 0;
             const feePct = parseInt(document.getElementById('feeInput').value) || 0;
             
-            // Calculations with new Trading Fee
+            // Calculations
             const feeVal = poVal * (feePct / 100);
             const grossInvoiceVal = poVal + feeVal;
             
             const reserveVal = poVal * (reservePct / 100);
-            const fundingVal = poVal - reserveVal;
+            // Net Funding: PO - Reserve - Wire Fee
+            const fundingVal = poVal - reserveVal - WIRE_FEE; 
 
             // Update UI Text
             document.getElementById('feeValueDisplay').textContent = `${feePct}%`;
@@ -526,11 +621,13 @@
             document.getElementById('metricGrossInvoice').textContent = `$${grossInvoiceVal.toLocaleString()}`;
             
             document.getElementById('metricReserve').textContent = `$${reserveVal.toLocaleString()}`;
+            document.getElementById('metricWireFee').textContent = `$${WIRE_FEE.toLocaleString()}`;
             document.getElementById('metricFunding').textContent = `$${fundingVal.toLocaleString()}`;
 
-            // Update Funds Chart (Split based on PO asset)
+            // Update Funds Chart (Keeping it simple for visualization scale)
             fundsChart.data.labels = [['PO Value'], ['Client Reserve', `(${reservePct}%)`], ['Net Funding', '(Disbursed)']];
-            fundsChart.data.datasets[0].data = [poVal, reserveVal, fundingVal];
+            // Chart displays the primary flow (PO - Reserve), detailed fee deducted in metric text only.
+            fundsChart.data.datasets[0].data = [poVal, reserveVal, poVal - reserveVal]; 
             fundsChart.update();
 
             // Update Collection Chart (Mock logic: Risk influenced by both reserve and fee)
@@ -540,58 +637,15 @@
             collectionChart.update();
         }
 
-        // --- CHART 3: Ecosystem (Plotly) ---
-        function initPlotly() {
-            const participants = {
-                x: ['Q1', 'Q2', 'Q3', 'Q4'],
-                y: [500000, 750000, 1200000, 1800000],
-                name: 'Participant Funding Volume',
-                type: 'bar',
-                // Updated color: Slate-800
-                marker: { color: '#1E293B' }
-            };
-
-            const brokers = {
-                x: ['Q1', 'Q2', 'Q3', 'Q4'],
-                y: [25000, 37500, 60000, 90000],
-                name: 'Broker Commissions Paid',
-                type: 'scatter',
-                mode: 'lines+markers',
-                yaxis: 'y2',
-                // Updated color: Cyan-500
-                line: { color: '#06B6D4', width: 3 },
-                marker: { size: 8 }
-            };
-
-            const layout = {
-                font: { family: 'Plus Jakarta Sans', color: '#1E293B' },
-                margin: { l: 50, r: 50, t: 30, b: 50 },
-                showlegend: true,
-                legend: { orientation: 'h', y: 1.1 },
-                xaxis: { title: 'Fiscal Quarters' },
-                yaxis: { title: 'Funding Volume ($)', side: 'left' },
-                yaxis2: {
-                    title: 'Commissions ($)',
-                    overlaying: 'y',
-                    side: 'right',
-                    showgrid: false
-                },
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                plot_bgcolor: 'rgba(0,0,0,0)'
-            };
-
-            const config = { responsive: true, displayModeBar: false };
-
-            Plotly.newPlot('ecosystemPlot', [participants, brokers], layout, config);
-        }
-
         // --- INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
+            // Set initial active step to 4 (Invoice Creation) for demonstration
+            // activeIndex = 3; 
             renderSteps();
             renderContent();
-            // Re-initialize charts to use new colors
+            
+            // Re-initialize charts
             initCharts();
-            initPlotly();
 
             // Event Listeners for Simulator
             document.getElementById('poInput').addEventListener('input', updateSimulation);
